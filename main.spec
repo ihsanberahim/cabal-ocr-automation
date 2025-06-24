@@ -2,13 +2,24 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['unified_game_automation/main.py'],
     pathex=[],
     binaries=[],
     datas=[
-        ('Tesseract', 'Tesseract'),
+        ('unified_game_automation/Tesseract', 'Tesseract'),
     ],
-    hiddenimports=['pyautogui', 'pynput', 'PIL', 'pynput'],
+    hiddenimports=[
+        'PIL',
+        'pywinauto',
+        'keyboard',
+        'mouse',
+        'win32gui',
+        'win32con',
+        'win32ui',
+        'threading',
+        'tkinter.ttk',
+        'pytesseract'
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -24,11 +35,12 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='main',
+    name='Stellar_and_Arrival_Automation',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
+    upx_dir=r'C:\Users\Hello\Desktop\upx',
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,
@@ -37,4 +49,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    onefile=True,
+    icon=None,
 )
