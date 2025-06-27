@@ -51,3 +51,6 @@ If you have any questions or need assistance contact me on Discord (aquazz) or h
 youtube example usage video: https://youtu.be/0KVkZXdlfyY
 
 Incase you're not a part of PlayCabal community, here is my referral link: https://playcabal.to/referral/3055
+
+if you wanna support me and wish for the application to be upgraded further here you can drop me some coffee money =)
+`https://buymeacoffee.com/aquazz`
