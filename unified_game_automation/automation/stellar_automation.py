@@ -196,6 +196,11 @@ class StellarAutomation:
                 self.update_status("Option found - success!")
                 self.stop()
             else:
+                # Catch stop (emergency or otherwise) before hitting imprint again
+                if self.running == False:
+                    self.loop_in_progress = False
+                    self.update_status("Stellar automation stopped")
+                    return
                 # Continue automation - click imprint button
                 if not self.game_connector.is_connected():
                     if not self.game_connector.connect_to_game():
