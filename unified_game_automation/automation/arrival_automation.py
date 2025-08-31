@@ -282,9 +282,9 @@ class ArrivalAutomation:
     def check_desired_stats(self, current_stats, desired_stats):
         """
         Check if current stats meet the desired criteria for arrival skills
-        - If only offensive stat specified: The offensive stat must be found
+        - If multiple offensive stats specified: Check them in order (1st, 2nd, 3rd) - any match is success
         - If only defensive stat specified: The defensive stat must be found
-        - If both are specified: Both the offensive AND defensive stat must be found
+        - If both are specified: Any offensive stat AND the defensive stat must be found
         """
         if not desired_stats:
             return True
@@ -292,24 +292,29 @@ class ArrivalAutomation:
         if not desired_stats.get('offensive') and not desired_stats.get('defensive'):
             return True
 
-        # Check if offensive stat matches (if specified)
+        # Check if any offensive stat matches (if specified) - try in priority order
         off_match = False
         if desired_stats.get('offensive'):
-            display_stat_name, min_value, _ = desired_stats['offensive'][0]
-            base_stat_name = get_base_stat_name(display_stat_name)
+            for i, (display_stat_name, min_value, variation) in enumerate(desired_stats['offensive'], 1):
+                base_stat_name = get_base_stat_name(display_stat_name)
 
-            if base_stat_name in current_stats:
-                stat_value = current_stats[base_stat_name]
-                if stat_value is None:
-                    # Special case: arrival skill detected but value unavailable due to UI collision
-                    self.update_status(f"🎉 FOUND: {display_stat_name} detected!")
-                    self.update_status(f"⚠️ Note: Cannot verify value due to UI collision - please check manually")
-                    self.stop()
-                    messagebox.showinfo("Found it!", f"{display_stat_name} detected!\n\nNote: Cannot read value due to UI collision.\nPlease verify the value manually.")
-                    return True
-                elif stat_value >= min_value:
-                    off_match = True
-                    self.update_status(f"✅ MATCH: Found {display_stat_name} with value {stat_value} (target: {min_value}+)")
+                if base_stat_name in current_stats:
+                    stat_value = current_stats[base_stat_name]
+                    if stat_value is None:
+                        # Special case: arrival skill detected but value unavailable due to UI collision
+                        self.update_status(f"🎉 FOUND: {display_stat_name} detected! (Priority {i})")
+                        self.update_status(f"⚠️ Note: Cannot verify value due to UI collision - please check manually")
+                        self.stop()
+                        messagebox.showinfo("Found it!", f"{display_stat_name} detected!\n\nNote: Cannot read value due to UI collision.\nPlease verify the value manually.")
+                        return True
+                    elif stat_value >= min_value:
+                        off_match = True
+                        self.update_status(f"✅ MATCH: Found {display_stat_name} with value {stat_value} (target: {min_value}+) - Priority {i}")
+                        break  # Found a match, no need to check lower priority stats
+                    else:
+                        self.update_status(f"❌ {display_stat_name} found but value {stat_value} < {min_value} - trying next priority")
+                else:
+                    self.update_status(f"❌ {display_stat_name} not found - trying next priority")
         else:
             off_match = True
 

@@ -80,22 +80,54 @@ class ArrivalTab:
         stats_frame = ttk.LabelFrame(main_frame, text="Desired Stats", padding="5")
         stats_frame.pack(fill=tk.X, pady=(0, 10))
 
-        # Offensive stat selection
-        off_frame = ttk.Frame(stats_frame)
-        off_frame.pack(fill=tk.X, pady=2)
+        # Offensive stat selection - 1st priority
+        off_frame1 = ttk.Frame(stats_frame)
+        off_frame1.pack(fill=tk.X, pady=2)
 
-        ttk.Label(off_frame, text="Offensive Stat:").pack(side=tk.LEFT)
-        self.off_stat = tk.StringVar()
+        ttk.Label(off_frame1, text="Offensive Stat (1st):").pack(side=tk.LEFT)
+        self.off_stat1 = tk.StringVar()
 
         offensive_skills = [""] + get_offensive_skills()  # Add empty option
-        self.off_stat_dropdown = ttk.Combobox(off_frame, textvariable=self.off_stat, values=offensive_skills, state="readonly", width=20)
-        self.off_stat_dropdown.pack(side=tk.LEFT, padx=(5, 0))
-        self.off_stat_dropdown.bind("<<ComboboxSelected>>", self.update_off_variations)
+        self.off_stat1_dropdown = ttk.Combobox(off_frame1, textvariable=self.off_stat1, values=offensive_skills, state="readonly", width=20)
+        self.off_stat1_dropdown.pack(side=tk.LEFT, padx=(5, 0))
+        self.off_stat1_dropdown.bind("<<ComboboxSelected>>", lambda e: self.update_off_variations(1))
 
-        ttk.Label(off_frame, text="Min Value:").pack(side=tk.LEFT, padx=(10, 0))
-        self.off_var = tk.StringVar()
-        self.off_var_dropdown = ttk.Combobox(off_frame, textvariable=self.off_var, state="readonly", width=8)
-        self.off_var_dropdown.pack(side=tk.LEFT, padx=(5, 0))
+        ttk.Label(off_frame1, text="Min Value:").pack(side=tk.LEFT, padx=(10, 0))
+        self.off_var1 = tk.StringVar()
+        self.off_var1_dropdown = ttk.Combobox(off_frame1, textvariable=self.off_var1, state="readonly", width=8)
+        self.off_var1_dropdown.pack(side=tk.LEFT, padx=(5, 0))
+
+        # Offensive stat selection - 2nd priority
+        off_frame2 = ttk.Frame(stats_frame)
+        off_frame2.pack(fill=tk.X, pady=2)
+
+        ttk.Label(off_frame2, text="Offensive Stat (2nd):").pack(side=tk.LEFT)
+        self.off_stat2 = tk.StringVar()
+
+        self.off_stat2_dropdown = ttk.Combobox(off_frame2, textvariable=self.off_stat2, values=offensive_skills, state="readonly", width=20)
+        self.off_stat2_dropdown.pack(side=tk.LEFT, padx=(5, 0))
+        self.off_stat2_dropdown.bind("<<ComboboxSelected>>", lambda e: self.update_off_variations(2))
+
+        ttk.Label(off_frame2, text="Min Value:").pack(side=tk.LEFT, padx=(10, 0))
+        self.off_var2 = tk.StringVar()
+        self.off_var2_dropdown = ttk.Combobox(off_frame2, textvariable=self.off_var2, state="readonly", width=8)
+        self.off_var2_dropdown.pack(side=tk.LEFT, padx=(5, 0))
+
+        # Offensive stat selection - 3rd priority
+        off_frame3 = ttk.Frame(stats_frame)
+        off_frame3.pack(fill=tk.X, pady=2)
+
+        ttk.Label(off_frame3, text="Offensive Stat (3rd):").pack(side=tk.LEFT)
+        self.off_stat3 = tk.StringVar()
+
+        self.off_stat3_dropdown = ttk.Combobox(off_frame3, textvariable=self.off_stat3, values=offensive_skills, state="readonly", width=20)
+        self.off_stat3_dropdown.pack(side=tk.LEFT, padx=(5, 0))
+        self.off_stat3_dropdown.bind("<<ComboboxSelected>>", lambda e: self.update_off_variations(3))
+
+        ttk.Label(off_frame3, text="Min Value:").pack(side=tk.LEFT, padx=(10, 0))
+        self.off_var3 = tk.StringVar()
+        self.off_var3_dropdown = ttk.Combobox(off_frame3, textvariable=self.off_var3, state="readonly", width=8)
+        self.off_var3_dropdown.pack(side=tk.LEFT, padx=(5, 0))
 
         # Defensive stat selection
         def_frame = ttk.Frame(stats_frame)
@@ -230,17 +262,31 @@ class ArrivalTab:
 
         self.main_window.area_selector.select_area()
 
-    def update_off_variations(self, event=None):
+    def update_off_variations(self, stat_number, event=None):
         """Update the offensive stat variations dropdown based on selected stat"""
-        selected_stat = self.off_stat.get()
+        if stat_number == 1:
+            selected_stat = self.off_stat1.get()
+            dropdown = self.off_var1_dropdown
+            var = self.off_var1
+        elif stat_number == 2:
+            selected_stat = self.off_stat2.get()
+            dropdown = self.off_var2_dropdown
+            var = self.off_var2
+        elif stat_number == 3:
+            selected_stat = self.off_stat3.get()
+            dropdown = self.off_var3_dropdown
+            var = self.off_var3
+        else:
+            return
+
         if selected_stat:
             variations = get_stat_variations(selected_stat)
-            self.off_var_dropdown['values'] = variations
+            dropdown['values'] = variations
             if variations:
-                self.off_var.set(variations[0])  # Select first variation by default
+                var.set(variations[0])  # Select first variation by default
         else:
-            self.off_var_dropdown['values'] = []
-            self.off_var.set("")
+            dropdown['values'] = []
+            var.set("")
 
     def update_def_variations(self, event=None):
         """Update the defensive stat variations dropdown based on selected stat"""
@@ -261,7 +307,7 @@ class ArrivalTab:
             return
 
         # Check if at least one stat is specified
-        if not self.off_stat.get() and not self.def_stat.get():
+        if not (self.off_stat1.get() or self.off_stat2.get() or self.off_stat3.get() or self.def_stat.get()):
             messagebox.showerror("Error", "Please specify at least one stat to look for.")
             self.main_window.clear_running_tool()
             return
@@ -272,21 +318,30 @@ class ArrivalTab:
             'defensive': []
         }
 
-        # Add offensive stat if specified
-        stat_name = self.off_stat.get()
-        if stat_name:
-            variation = self.off_var.get()
-            if not variation:
-                messagebox.showerror("Error", f"Please select a minimum value for {stat_name}.")
-                self.main_window.clear_running_tool()
-                return
+        # Add offensive stats if specified (in priority order)
+        for stat_num in [1, 2, 3]:
+            if stat_num == 1:
+                stat_name = self.off_stat1.get()
+                variation = self.off_var1.get()
+            elif stat_num == 2:
+                stat_name = self.off_stat2.get()
+                variation = self.off_var2.get()
+            elif stat_num == 3:
+                stat_name = self.off_stat3.get()
+                variation = self.off_var3.get()
 
-            # Extract numeric value from the variation
-            value_match = re.search(r'(\d+)', variation)
-            if value_match:
-                off_val = int(value_match.group(1))
-                desired_stats['offensive'].append((stat_name, off_val, variation))
-                self.main_window.update_status(f"Looking for {stat_name} with minimum value {variation}")
+            if stat_name:
+                if not variation:
+                    messagebox.showerror("Error", f"Please select a minimum value for {stat_name}.")
+                    self.main_window.clear_running_tool()
+                    return
+
+                # Extract numeric value from the variation
+                value_match = re.search(r'(\d+)', variation)
+                if value_match:
+                    off_val = int(value_match.group(1))
+                    desired_stats['offensive'].append((stat_name, off_val, variation))
+                    self.main_window.update_status(f"Looking for {stat_name} with minimum value {variation}")
 
         # Add defensive stat if specified
         stat_name = self.def_stat.get()
