@@ -195,6 +195,10 @@ class ArrivalAutomation:
              ('arrival skill duration' in text_lower):
             special_stats["Arrival Skill Duration Increase"] = None
 
+        # Case 3: OCR misreading "Al Skill Amp Up" -> "All Skill Amp. UP"
+        elif ('al skill amp' in text_lower and 'up' in text_lower):
+            special_stats["All Skill Amp. UP"] = None
+
         return special_stats
 
     def is_arrival_skill_line(self, line):
