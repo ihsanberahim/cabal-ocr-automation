@@ -36,11 +36,11 @@ exe = EXE(
     a.datas,
     [],
     name='Stellar_and_Arrival_Automation',
-    debug=False,
+    debug=True,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
-    upx_dir=r'C:\Users\Hello\Desktop\upx',
+    upx=True,               # still allows UPX if found in PATH
+    upx_dir=None,           # no hardcoded path
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,
