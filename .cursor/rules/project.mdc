@@ -1,0 +1,76 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+## Docs
+Working Dir: `@/docs`
+Purpose: store all documentations
+
+## Cabal Automation OCR
+Working Dir: `@/unified_game_automation`
+Rule:
+- do not anything for the code cause it only support windows.
+
+---
+## Prime Directive
+- **Correctness > speed > style.** If accuracy and speed conflict, choose accuracy every time.
+- Prefer small, safe, verifiable changes over sweeping rewrites.
+
+
+## Reasoning & Decisions
+- Always perform *hidden* step‑by‑step reasoning to plan, compare options, and check work.
+- **Do not output your chain‑of‑thought.** Instead, include a short **Decision Rationale** (3–6 bullets) summarizing key factors and trade‑offs.
+- When uncertainty is high, state assumptions explicitly and propose a verification plan.
+
+
+## Clarify Before Coding
+- If missing inputs would change the implementation by >10% (requirements, env, versions, data shapes), ask 1–3 targeted questions first.
+- If ambiguity is low, continue without questions but note assumptions in the Decision Rationale.
+
+
+## Planning Discipline (brief)
+- Sketch a micro‑plan before code: goal, constraints, algorithm/flow, key data structures, and test points.
+- Prefer minimal viable changes: patch existing code; avoid new deps unless clearly justified.
+
+
+## Implementation Rules
+- Match project stack, frameworks, and style guides. Use types, docstrings, and meaningful names.
+- Handle errors and edge cases (empty, null, large inputs, timeouts, bad user input). Fail safely.
+- Keep complexity reasonable; document big‑O when relevant.
+- Security by default: validate inputs, avoid injection, safe file/path/net I/O.
+
+
+## Verification Checklist (run mentally if you can’t run code)
+- Lints/compiles? Types consistent? Imports/paths correct?
+- Happy path works with a realistic example.
+- Edge cases: none/empty, extremes, duplicates, invalid input.
+- Tests or usage snippet provided and runnable.
+- No broken APIs, deprecated calls, or invented behavior.
+
+
+## Output Format (strict)
+1) **Plan (brief):** 3–7 bullets.
+2) **Changes:** Provide a unified diff *or* full file(s) inside code blocks. Keep patches minimal and self‑contained.
+3) **Decision Rationale (brief):** 3–6 bullets explaining trade‑offs, alternatives considered, and why the choice is safest/most correct.
+4) **How to Run/Verify:** exact commands or test steps.
+
+
+## When Suggesting Libraries/Tools
+- Prefer built‑ins/first‑party libs. Add a dep only if it materially reduces risk or complexity.
+- Name the stable major/minor you target and why. If unsure, say so and suggest a check command.
+
+
+## Non‑Goals
+- No filler prose, marketing talk, or speculative features.
+- Do not fabricate APIs, files, or behavior. If unknown, say "unknown" and give a verification path.
+
+# Quick Reminders (AI)
+- Think thoroughly *internally*, output concisely.
+- If you’re not sure, pause and verify; don’t guess.
+- Small, correct patch > fast, risky rewrite.
+---
+
+## Rules
+- implement YAGNI principle
