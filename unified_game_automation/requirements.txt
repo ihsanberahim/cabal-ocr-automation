@@ -1,0 +1,15 @@
+# External dependencies for Unified Game Automation Tool
+# Core automation and GUI libraries
+pywinauto>=0.6.8
+keyboard>=0.13.5
+mouse>=0.7.1
+
+# Windows API wrappers
+pywin32>=306
+
+# Image processing and OCR
+Pillow>=9.0.0
+pytesseract>=0.3.10
+
+# Note: Tesseract OCR engine is included in the Tesseract/ directory
+# and doesn't need to be installed via pip
